@@ -18,6 +18,11 @@
     <name>Jackson-dataformat-BEncode</name>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <java.version>1.8</java.version>
         <jackson.version.annotations>2.3.0</jackson.version.annotations>
         <jackson.version.core>2.3.0</jackson.version.core>
         <!-- Generate PackageVersion.java into this directory. -->
