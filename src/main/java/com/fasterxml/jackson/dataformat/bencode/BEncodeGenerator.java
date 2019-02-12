@@ -1,13 +1,6 @@
 package com.fasterxml.jackson.dataformat.bencode;
 
-import com.fasterxml.jackson.core.Base64Variant;
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonStreamContext;
-import com.fasterxml.jackson.core.ObjectCodec;
-import com.fasterxml.jackson.core.SerializableString;
-import com.fasterxml.jackson.core.TreeNode;
-import com.fasterxml.jackson.core.Version;
+import com.fasterxml.jackson.core.*;
 import com.fasterxml.jackson.dataformat.bencode.context.BContext;
 import com.fasterxml.jackson.dataformat.bencode.context.StreamOutputContext;
 
@@ -16,12 +9,7 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import static com.fasterxml.jackson.dataformat.bencode.BEncodeFormat.DICTIONARY_PREFIX;
-import static com.fasterxml.jackson.dataformat.bencode.BEncodeFormat.END_SUFFIX;
-import static com.fasterxml.jackson.dataformat.bencode.BEncodeFormat.INTEGER_PREFIX;
-import static com.fasterxml.jackson.dataformat.bencode.BEncodeFormat.LIST_PREFIX;
-import static com.fasterxml.jackson.dataformat.bencode.BEncodeFormat.STRING_SEPARATOR;
-import static com.fasterxml.jackson.dataformat.bencode.BEncodeFormat.UTF_8;
+import static com.fasterxml.jackson.dataformat.bencode.BEncodeFormat.*;
 
 /**
  * Writer Based
@@ -158,7 +146,9 @@ public class BEncodeGenerator extends JsonGenerator {
 
     @Override
     public void writeEndArray() throws IOException {
-        if (!ctx.inArray()) throw new JsonGenerationException("not in list");
+        if (!ctx.inArray()) {
+            throw new JsonGenerationException("not in list");
+        }
         switchToParent();
         outputContext.write(END_SUFFIX);
     }
@@ -172,7 +162,9 @@ public class BEncodeGenerator extends JsonGenerator {
 
     @Override
     public void writeEndObject() throws IOException {
-        if (!ctx.inObject()) throw new JsonGenerationException("not in dictionary");
+        if (!ctx.inObject()) {
+            throw new JsonGenerationException("not in dictionary");
+        }
         switchToParent();
         outputContext.write(END_SUFFIX);
     }

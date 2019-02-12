@@ -1,10 +1,6 @@
 package com.fasterxml.jackson.dataformat.bencode.context;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import java.io.*;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -26,7 +22,7 @@ public class StreamOutputContext implements OutputContext {
     }
 
     @Override
-    public OutputStream getOutputStream() throws IOException{
+    public OutputStream getOutputStream() throws IOException {
         if (writer != null) {
             writer.flush();
         }
@@ -36,7 +32,9 @@ public class StreamOutputContext implements OutputContext {
 
     @Override
     public Writer getWriter() throws IOException {
-        if (writer != null) return writer;
+        if (writer != null) {
+            return writer;
+        }
         return new BufferedWriter(new OutputStreamWriter(outputStream, charset));
     }
 
@@ -81,7 +79,7 @@ public class StreamOutputContext implements OutputContext {
         write(buf);
     }
 
-    static byte [] getByteBuf(long i) {
+    static byte[] getByteBuf(long i) {
         int size = (i < 0) ? stringSize(-i) + 1 : stringSize(i);
         byte[] buf = new byte[size];
         getBytes(i, size, buf);
@@ -115,23 +113,27 @@ public class StreamOutputContext implements OutputContext {
 
     // Requires positive x
     static int stringSize(int x) {
-        for (int i=0; ; i++)
-            if (x <= SIZE_TABLE[i])
-                return i+1;
+        for (int i = 0; ; i++) {
+            if (x <= SIZE_TABLE[i]) {
+                return i + 1;
+            }
+        }
     }
 
     // Requires positive x
     static int stringSize(long x) {
         long p = 10;
         for (int i = 1; i < 19; i++) {
-            if (x < p) return i;
+            if (x < p) {
+                return i;
+            }
             p = 10 * p;
         }
         return 19;
     }
 
     final static int[] SIZE_TABLE = {
-            9, 99, 999, 9999, 99999, 999999, 9999999, 99999999, 999999999, Integer.MAX_VALUE };
+            9, 99, 999, 9999, 99999, 999999, 9999999, 99999999, 999999999, Integer.MAX_VALUE};
 
     final static byte[] DIGIT_ONES = {
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
@@ -178,18 +180,20 @@ public class StreamOutputContext implements OutputContext {
             // really: r = i - (q * 100);
             r = i - ((q << 6) + (q << 5) + (q << 2));
             i = q;
-            buf [--charPos] = DIGIT_ONES[r];
-            buf [--charPos] = DIGIT_TENS[r];
+            buf[--charPos] = DIGIT_ONES[r];
+            buf[--charPos] = DIGIT_TENS[r];
         }
 
         // Fall through to fast mode for smaller numbers
         // assert(i <= 65536, i);
-        for (;;) {
-            q = (i * 52429) >>> (16+3);
+        for (; ; ) {
+            q = (i * 52429) >>> (16 + 3);
             r = i - ((q << 3) + (q << 1));  // r = i-(q*10) ...
-            buf [--charPos] = digits [r];
+            buf[--charPos] = digits[r];
             i = q;
-            if (i == 0) break;
+            if (i == 0) {
+                break;
+            }
         }
     }
 
@@ -207,7 +211,7 @@ public class StreamOutputContext implements OutputContext {
         while (i > Integer.MAX_VALUE) {
             q = i / 100;
             // really: r = i - (q * 100);
-            r = (int)(i - ((q << 6) + (q << 5) + (q << 2)));
+            r = (int) (i - ((q << 6) + (q << 5) + (q << 2)));
             i = q;
             buf[--charPos] = DIGIT_ONES[r];
             buf[--charPos] = DIGIT_TENS[r];

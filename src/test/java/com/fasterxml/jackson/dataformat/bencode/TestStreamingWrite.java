@@ -16,7 +16,7 @@ public class TestStreamingWrite {
     protected BEncodeGenerator underTest; // generator under test
     protected ByteArrayOutputStream out;
 
-    public enum Gender { MALE, FEMALE }
+    public enum Gender {MALE, FEMALE}
 
     @Before
     public void startUp() throws IOException {

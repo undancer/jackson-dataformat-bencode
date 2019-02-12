@@ -11,7 +11,9 @@ public class NumberContext {
     private static final long[] TEN_TBL = {10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000};
     private final StreamInputContext sic;
 
-    /** including possible leading minus (-) sign, should be >= 20. */
+    /**
+     * including possible leading minus (-) sign, should be >= 20.
+     */
     public static final int MAX_SUPPORTED_NUMBER_LENGTH = 63; //
 
     private byte[] numBuf = new byte[MAX_SUPPORTED_NUMBER_LENGTH + 1]; // +1 to be able to catch expected terminator
@@ -38,7 +40,9 @@ public class NumberContext {
     private int determineNumberLength(int startOffset, int length) throws JsonParseException {
         int offset = startOffset;
         boolean negative = length > 0 && numBuf[offset] == '-';
-        if (negative) offset++;
+        if (negative) {
+            offset++;
+        }
         length += offset;
 
         while (offset < length && isLatinDigit(numBuf[offset])) {
@@ -46,15 +50,21 @@ public class NumberContext {
         }
 
         final int numberLength = offset - startOffset;
-        if (negative && numberLength == 1) return 0;
+        if (negative && numberLength == 1) {
+            return 0;
+        }
 
         return numberLength;
     }
 
     int compareBytes(byte[] a, int offset) {
         for (byte ca : a) {
-            if (ca < numBuf[offset]) return -1;
-            if (ca > numBuf[offset++]) return 1;
+            if (ca < numBuf[offset]) {
+                return -1;
+            }
+            if (ca > numBuf[offset++]) {
+                return 1;
+            }
         }
         return 0;
     }
@@ -66,8 +76,10 @@ public class NumberContext {
 
         try {
             numberLength = determineNumberLength(0, sic.read(numBuf, 0, readBytes));
-            if (numberLength == 0) throw new JsonParseException(
-                    "tried to guess number with insufficient input available", sic.getJsonLocation());
+            if (numberLength == 0) {
+                throw new JsonParseException(
+                        "tried to guess number with insufficient input available", sic.getJsonLocation());
+            }
 
             currentNegative = numBuf[0] == '-';
             currentPtr = currentNegative ? 1 : 0;
@@ -91,8 +103,12 @@ public class NumberContext {
     }
 
     private void ensureGuessPerformedFor(JsonParser.NumberType expectedType) {
-        if (numberLength < 0) throw new IllegalStateException("number size should be guessed before parse");
-        if (currentType.ordinal() > expectedType.ordinal()) throw new IllegalStateException("integer overflow");
+        if (numberLength < 0) {
+            throw new IllegalStateException("number size should be guessed before parse");
+        }
+        if (currentType.ordinal() > expectedType.ordinal()) {
+            throw new IllegalStateException("integer overflow");
+        }
     }
 
     private void resetCurrentGuess() {
@@ -127,7 +143,9 @@ public class NumberContext {
         while (currentPtr < end) {
             prevCurrentPtr = currentPtr;
             nextValue = parseIntInternal();
-            if (value > 0) value *= TEN_TBL[currentPtr - prevCurrentPtr - 1];
+            if (value > 0) {
+                value *= TEN_TBL[currentPtr - prevCurrentPtr - 1];
+            }
             value += nextValue;
         }
 
@@ -145,7 +163,9 @@ public class NumberContext {
         while (currentPtr < end) {
             prevCurrentPtr = currentPtr;
             nextValue = parseIntInternal();
-            if (!value.equals(BigInteger.ZERO)) value = value.multiply(BigInteger.TEN.pow(currentPtr - prevCurrentPtr));
+            if (!value.equals(BigInteger.ZERO)) {
+                value = value.multiply(BigInteger.TEN.pow(currentPtr - prevCurrentPtr));
+            }
             value = value.add(BigInteger.valueOf(nextValue));
         }
 

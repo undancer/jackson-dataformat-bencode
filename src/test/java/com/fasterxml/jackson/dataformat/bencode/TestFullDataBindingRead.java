@@ -11,9 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static org.hamcrest.CoreMatchers.hasItems;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 public class TestFullDataBindingRead {

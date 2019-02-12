@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonToken;
 import java.io.IOException;
 
 public class BContext extends JsonStreamContext {
+
     void incIndex() {
         _index++;
     }
@@ -57,7 +58,9 @@ public class BContext extends JsonStreamContext {
     }
 
     public BContext changeToParent() throws IOException {
-        if (parent == null) throw new IOException("trying to access parent of root");
+        if (parent == null) {
+            throw new IOException("trying to access parent of root");
+        }
         return parent;
     }
 

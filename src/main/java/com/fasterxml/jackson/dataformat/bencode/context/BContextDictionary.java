@@ -15,7 +15,9 @@ public class BContextDictionary extends BContext {
 
     @Override
     public Expect valueNext() throws IOException {
-        if (expected != Expect.VALUE) throw new IOException("unexpected value");
+        if (expected != Expect.VALUE) {
+            throw new IOException("unexpected value");
+        }
         parent.incIndex();
         expected = Expect.KEY;
         return Expect.VALUE;
@@ -23,12 +25,13 @@ public class BContextDictionary extends BContext {
 
     @Override
     public Expect keyNext(String key) throws IOException {
-        if (expected != Expect.KEY) throw new IOException("unexpected key");
+        if (expected != Expect.KEY) {
+            throw new IOException("unexpected key");
+        }
         if (prevKey != null) {
             int compareResult = prevKey.compareTo(key);
             if (compareResult >= 0) {
-                throw new IOException(compareResult == 0 ?
-                        "duplicate dictionary key" : "keys must be in lexicographically ascending order");
+                throw new IOException(compareResult == 0 ? "duplicate dictionary key" : "keys must be in lexicographically ascending order");
             }
         }
         prevKey = key;
@@ -43,7 +46,9 @@ public class BContextDictionary extends BContext {
 
     @Override
     public BContext changeToParent() throws IOException {
-        if (expected != Expect.KEY) throw new IOException("uneven dictionary contents");
+        if (expected != Expect.KEY) {
+            throw new IOException("uneven dictionary contents");
+        }
         return super.changeToParent();
     }
 

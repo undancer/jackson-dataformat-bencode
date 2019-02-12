@@ -1,12 +1,6 @@
 package com.fasterxml.jackson.dataformat.bencode;
 
-import com.fasterxml.jackson.core.Base64Variant;
-import com.fasterxml.jackson.core.JsonLocation;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonStreamContext;
-import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.core.ObjectCodec;
-import com.fasterxml.jackson.core.Version;
+import com.fasterxml.jackson.core.*;
 import com.fasterxml.jackson.core.base.ParserMinimalBase;
 import com.fasterxml.jackson.dataformat.bencode.context.BContext;
 import com.fasterxml.jackson.dataformat.bencode.context.NumberContext;
@@ -18,11 +12,7 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import static com.fasterxml.jackson.dataformat.bencode.BEncodeFormat.DICTIONARY_PREFIX;
-import static com.fasterxml.jackson.dataformat.bencode.BEncodeFormat.END_SUFFIX;
-import static com.fasterxml.jackson.dataformat.bencode.BEncodeFormat.INTEGER_PREFIX;
-import static com.fasterxml.jackson.dataformat.bencode.BEncodeFormat.LIST_PREFIX;
-import static com.fasterxml.jackson.dataformat.bencode.BEncodeFormat.UTF_8;
+import static com.fasterxml.jackson.dataformat.bencode.BEncodeFormat.*;
 import static com.fasterxml.jackson.dataformat.bencode.PackageVersion.VERSION;
 
 public class BEncodeParser extends ParserMinimalBase {
@@ -110,15 +100,20 @@ public class BEncodeParser extends ParserMinimalBase {
     }
 
     protected void parseNextLength(int token) throws IOException {
-        if (token < '0' && token > '9') throw new JsonParseException("unknown token", getCurrentLocation());
-        if (numberContext.guessType() != NumberType.INT)
+        if (token < '0' && token > '9') {
+            throw new JsonParseException("unknown token", getCurrentLocation());
+        }
+        if (numberContext.guessType() != NumberType.INT) {
             throw new JsonParseException("size overflow", getCurrentLocation());
+        }
         nextStringLength = numberContext.parseInt();
-        if (nextStringLength < 0)
+        if (nextStringLength < 0) {
             throw new JsonParseException("illegal byte string size", getCurrentLocation());
+        }
         token = sic.read();
-        if (token != ':')
+        if (token != ':') {
             throw new JsonParseException("malformed byte string length token", getCurrentLocation());
+        }
     }
 
     @Override
@@ -163,7 +158,9 @@ public class BEncodeParser extends ParserMinimalBase {
             } catch (IOException e) {
                 throw new JsonParseException(e.getMessage(), sic.getJsonLocation());
             }
-        } else valueNext();
+        } else {
+            valueNext();
+        }
 
         return returnValue;
     }
@@ -203,14 +200,17 @@ public class BEncodeParser extends ParserMinimalBase {
     }
 
     private byte[] getBinaryInternal() throws IOException {
-        if (nextStringLength < 0)
+        if (nextStringLength < 0) {
             throw new IllegalStateException("next token should be determined before invoking getText");
+        }
 
         byte[] bytes = new byte[nextStringLength];
         int readLen;
 
         readLen = sic.read(bytes, 0, nextStringLength);
-        if (readLen < nextStringLength) throw new JsonParseException("unexpected EOF", getCurrentLocation());
+        if (readLen < nextStringLength) {
+            throw new JsonParseException("unexpected EOF", getCurrentLocation());
+        }
         nextStringLength = -1;
         return bytes;
     }
@@ -273,7 +273,9 @@ public class BEncodeParser extends ParserMinimalBase {
     }
 
     private void checkIntegerIsClosed() throws IOException {
-        if (sic.read() != 'e') throw new JsonParseException("integer not closed", sic.getJsonLocation());
+        if (sic.read() != 'e') {
+            throw new JsonParseException("integer not closed", sic.getJsonLocation());
+        }
     }
 
     @Override

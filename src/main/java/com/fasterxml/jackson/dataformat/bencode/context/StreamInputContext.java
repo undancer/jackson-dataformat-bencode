@@ -24,7 +24,9 @@ public class StreamInputContext extends InputStream {
     @Override
     public long skip(long n) throws IOException {
         long skipped = 0, cSkipped;
-        while (skipped < n && (cSkipped = in.skip(n - skipped)) > 0) skipped += cSkipped;
+        while (skipped < n && (cSkipped = in.skip(n - skipped)) > 0) {
+            skipped += cSkipped;
+        }
         location.advance((int) skipped);
         return skipped;
     }
@@ -36,7 +38,9 @@ public class StreamInputContext extends InputStream {
 
     @Override
     public void reset() throws IOException {
-        if (!marked) throw new IllegalStateException("reset without preceding mark");
+        if (!marked) {
+            throw new IllegalStateException("reset without preceding mark");
+        }
         marked = false;
         location.set(markedLocation);
         in.reset();
@@ -45,7 +49,9 @@ public class StreamInputContext extends InputStream {
     @Override
     public int read(byte[] bytes, int off, int len) throws IOException {
         int sumLen = 0, currentLen;
-        while ((sumLen < len) && (currentLen = in.read(bytes, off + sumLen, len - sumLen)) > 0) sumLen += currentLen;
+        while ((sumLen < len) && (currentLen = in.read(bytes, off + sumLen, len - sumLen)) > 0) {
+            sumLen += currentLen;
+        }
         location.advance(sumLen);
         return sumLen;
     }

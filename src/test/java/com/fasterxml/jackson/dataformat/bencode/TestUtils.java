@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 
 public class TestUtils {
-    static byte [] BINARY_DATA = DatatypeConverter.parseHexBinary("E3811B9539CACFF680E418124272177C47477157");
+    static byte[] BINARY_DATA = DatatypeConverter.parseHexBinary("E3811B9539CACFF680E418124272177C47477157");
     public static final String TUTORIAL_EXAMPLE_ENCODED =
             "d6:gender4:MALE4:named5:first3:Joe4:last7:Sixpacke9:userImage20:" +
                     new String(BINARY_DATA, Charset.forName("ISO-8859-1")) + "8:verified5:falsee";
