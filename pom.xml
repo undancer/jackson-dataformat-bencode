@@ -23,8 +23,10 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <java.version>1.8</java.version>
-        <jackson.version.annotations>2.3.0</jackson.version.annotations>
-        <jackson.version.core>2.3.0</jackson.version.core>
+        <!--<jackson.version.annotations>2.3.0</jackson.version.annotations>-->
+        <jackson.version.annotations>2.9.8</jackson.version.annotations>
+        <!--<jackson.version.core>2.3.0</jackson.version.core>-->
+        <jackson.version.core>2.9.8</jackson.version.core>
         <!-- Generate PackageVersion.java into this directory. -->
         <packageVersion.dir>com/fasterxml/jackson/dataformat/bencode</packageVersion.dir>
         <packageVersion.package>${project.groupId}.bencode</packageVersion.package>
@@ -95,6 +97,15 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>cobertura-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                </configuration>
             </plugin>
         </plugins>
     </build>
