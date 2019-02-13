@@ -6,6 +6,8 @@ import com.fasterxml.jackson.dataformat.bencode.context.BContext;
 import com.fasterxml.jackson.dataformat.bencode.context.NumberContext;
 import com.fasterxml.jackson.dataformat.bencode.context.StreamInputContext;
 import com.fasterxml.jackson.dataformat.bencode.location.Location;
+import com.fasterxml.jackson.dataformat.bencode.util.CharsetUtils;
+import org.apache.commons.codec.binary.Base64;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -151,12 +153,13 @@ public class BEncodeParser extends ParserMinimalBase {
 
     @Override
     public String getText() throws IOException {
-        String returnValue = new String(getBinaryInternal(), UTF_8); // TODO add encoding support
+        byte[] bytes = getBinaryInternal();
+        String returnValue = CharsetUtils.isUTF8(bytes) ? new String(bytes, UTF_8) : Base64.encodeBase64String(bytes); // TODO add encoding support
         if (_currToken == JsonToken.FIELD_NAME) {
             try {
                 ctx.keyNext(returnValue);
             } catch (IOException e) {
-                throw new JsonParseException(e.getMessage(), sic.getJsonLocation());
+                throw new JsonParseException(this, e.getMessage(), sic.getJsonLocation());
             }
         } else {
             valueNext();
@@ -195,7 +198,7 @@ public class BEncodeParser extends ParserMinimalBase {
         try {
             ctx.valueNext();
         } catch (IOException e) {
-            throw new JsonParseException(e.getMessage(), sic.getJsonLocation());
+            throw new JsonParseException(this, e.getMessage(), sic.getJsonLocation());
         }
     }
 
